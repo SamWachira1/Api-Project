@@ -1,0 +1,211 @@
+.container {
+  display: flex;
+}
+
+.profileButtonContainer {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: flex-end; /* Spread items evenly */
+   
+}
+
+.homeLinkContainer {
+    position: relative;
+    display: flex;
+    height: 155px; /* Adjust height as needed */
+    flex-direction: row;
+    padding: 0 20px; /* Add padding to the sides */
+    justify-content: space-between;
+    background-color: lightgrey
+}
+
+
+
+.logo {
+    display: flex;
+    justify-content: start;
+} 
+
+.profileButton {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
+.list {
+    display: flex;
+    margin-top: -1em;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+.link{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto; /* Move Create a New Spot link to the right */
+    padding-right: 20px; /* Add padding to the right */
+}
+
+.link:hover {
+    color: white;
+}
+
+.profileDropdown {
+    position: absolute;
+    top: 6em;
+    right: 14px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px #000000e6;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    font-size: medium;
+    cursor: pointer;
+    width: 13em;
+    height: 11em;
+
+}
+
+
+/* .profileDropdown {
+    position: absolute;
+    top: 6em;
+    right: 14px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px #000000e6;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    font-size: medium;
+    cursor: pointer;
+    width: 13em;
+    height: 14em;
+
+} */
+
+.loginIcons {
+       /* width: 94%; */
+         /* width: 94%; */
+    position: relative;
+    top: 16px;
+    width: 9em;
+    height: 5em;
+    border-radius: 35px;
+    /* border-color: gray; */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+
+    color: white;
+}
+
+.loginIcons:hover{
+    box-shadow: 0 0 10px rgb(255, 255, 255); 
+}
+
+.menuItem {
+    border-bottom: 2px solid lightgrey;
+    margin-bottom: 0px;
+    margin-top: 2em;
+    width: 11em;
+    height: 31px;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+
+.menuItem:hover{
+    transform: translateY(-3px); /* Move the spot tile up by 5px on hover */
+    transition: transform 0.3s ease; /* Apply a smooth transition */
+}
+
+
+.menuItem1, .menuItem2{
+    border-bottom: 2px solid lightgrey;
+    margin-top: 4px;
+    margin-bottom: 0px;
+    width: 12em;
+    height: 20px;
+    height: 4em;
+    margin-left: -4px;
+
+}
+
+.menuItem3{
+    border-bottom: 2px solid lightgrey;
+    margin-top: 4px;
+    margin-bottom: 11px;
+    width: 12em;
+    height: 20px;
+    height: 4em;
+    margin-left: -4px;
+}
+
+.menuItem3:hover {
+    background-color: lightgray;
+    color: white;
+}
+
+.menuItemSignUp{
+    border-bottom: 2px solid lightgrey;
+    margin-top: 13px;
+    margin-bottom: 12px;
+    width: 9em;
+    margin-left: 8px;
+
+}
+
+.imgHomeNav {
+    height: 7.5em;
+    position: relative;
+    top: 9px;
+    border-radius: 4em 0em 4em 0em;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    transition: transform 2.3s ease;
+}
+
+.imgHomeNav:hover {
+    transform: rotateY(180deg);
+}
+
+
+.hidden {
+    display: none;
+}
+
+
+
+
+ul {
+    list-style: none; /* Remove default list styles */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    display: flex;
+    
+
+}
+
+
+.buttonContainer{
+    height: 3em;
+    width: 8em;
+    position: relative;
+    left: 24px;
+    background-color: #080849;
+    color: white;
+    border-radius: 14px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.buttonContainer:hover{
+    box-shadow: 0 0 10px rgba(50, 50, 50, 0.9); /* Darker box shadow color */
+    transform: translateY(-3px); /* Move the spot tile up by 5px on hover */
+    transition: transform 0.3s ease; /* Apply a smooth transition */
+}

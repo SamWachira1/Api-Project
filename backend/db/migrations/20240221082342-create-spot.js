@@ -45,12 +45,12 @@ module.exports = {
         allowNull: false,
       },
       lat: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.FLOAT,
         allowNull: false,
 
       },
       lng: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.FLOAT,
         allowNull: false,
 
       },
@@ -65,26 +65,11 @@ module.exports = {
 
       },
       price: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false,
 
       },
-      // numReviews: {
-      //   type: Sequelize.INTEGER,
-      //   allowNull: false 
-      // },
-
-      // avgStarRating: {
-      //   type: Sequelize.DECIMAL,
-      //   allowNull: false,
-
-      // },
-
-      // previewImage: {
-      //   type: Sequelize.STRING,
-      //   allowNull: false,
-
-      // },
+     
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -5,11 +5,11 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Image extends Model {
 
-    getImageable(options) {
-      if (!this.imageableType) return Promise.resolve(null);
-      const mixinMethodName = `get${this.imageableType}`;
-      return this[mixinMethodName](options);
-    }
+    // getImageable(options) {
+    //   if (!this.imageableType) return Promise.resolve(null);
+    //   const mixinMethodName = `get${this.imageableType}`;
+    //   return this[mixinMethodName](options);
+    // }
 
     static associate(models) {
       // define association here
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       Image.belongsTo(models.Spot,{
         foreignKey: 'imageableId',
         constraints: false,
-        as: 'SpotImages',
+        // as: 'Spot',
         scope: {
           imageableType: 'Spot'
         }
@@ -43,13 +43,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false 
     },
     imageableType: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         isIn: [['User', 'Spot', 'Review']]
       }
     },
-    imageableId: {
+    imageableId: { 
       type: DataTypes.INTEGER,
       allowNull: false,
       onDelete: 'CASCADE'

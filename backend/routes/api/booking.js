@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { Spot, User, Image, Review, Booking} = require('../../db/models');
 const { check } = require('express-validator');
-const { handleValidationErrors, handleValidationErrorsUsers, handleValidationErrorsSpots, checkBookingConflictsbookings } = require('../../utils/validation');
+const {Op} = require('sequelize')
+const { handleValidationErrors, handleValidationErrorsUsers, handleValidationErrorsSpots, checkBookingConflictsbookings, checkBookingConflictsUpdates } = require('../../utils/validation');
 
 
 const router = express.Router();
@@ -20,6 +21,7 @@ const validateBooking = [
     check('endDate')
       .notEmpty()
       .custom((value, { req }) => {
+
         const startDate = new Date(req.body.startDate);
         const endDate = new Date(value);
   
@@ -30,9 +32,8 @@ const validateBooking = [
       }),
 
       handleValidationErrors,
-      checkBookingConflictsbookings
-  ]
 
+  ]
 
 router.get('/current', requireAuth, async (req, res) => {
 
@@ -41,6 +42,12 @@ router.get('/current', requireAuth, async (req, res) => {
      const bookings = await Booking.findAll({
         where: {userId: user.id}
     })
+
+    if (!bookings){
+        return res.status(404).json({message: 'Bookings could not be found'})
+    }
+
+
 
     for (let booking of bookings) {
         
@@ -66,7 +73,7 @@ router.get('/current', requireAuth, async (req, res) => {
         let bookingStartDate = booking.startDate.toISOString().split('T')[0];
         let bookingEndDate = booking.endDate.toISOString().split('T')[0];
 
-        
+        let floatPrice = parseFloat(spot.price.toFixed(1))
     
           const formattedSpot = {
                 id: booking.id,
@@ -82,7 +89,7 @@ router.get('/current', requireAuth, async (req, res) => {
                 lng: spot.lng,
                 name: spot.name,
                 description: spot.description,
-                price: spot.price,
+                price: floatPrice,
                 previewImage: spotImage[0].url 
                 },
                 userId: booking.userId,
@@ -112,8 +119,68 @@ router.put('/:bookingId', requireAuth, validateBooking, async (req, res)=> {
 
     let booking = await Booking.findByPk(Number(bookingId))
 
+    if (!booking){
+        return res.status(404).json({message: "Booking couldn't be found"})
+    }
+
+
+    let queriedEndTime = new Date (booking.endDate).getTime()
+
+
+    if (booking.userId !== currUser.id){
+        return res.status(403).json({message: 'Forbidden'})
+    }
+
+    let startBookingDate = new Date (startDate).getTime()
+    let endBookingDate = new Date (endDate).getTime()
+
+    let currDateTime = new Date().getTime()
+
+    if (currDateTime > queriedEndTime ){
+        res.status(403).json({message: "Past bookings can't be modified"})
+    }
+
+    let excludingCurrentBooking = await Booking.findAll({
+        where: {
+            id: {
+                [Op.ne]: bookingId
+            },
+
+            spotId: booking.spotId 
+
+            
+        }
+    })
+
+ 
+
+    for (let otherBooking of excludingCurrentBooking){
+
+        let startDateOtherBooking = new Date(otherBooking.startDate).getTime()
+        let endingDateOtherBooking = new Date (otherBooking.endDate).getTime()
+      
+        if ((startBookingDate < endingDateOtherBooking && endBookingDate > startDateOtherBooking) || 
+           (startBookingDate === endingDateOtherBooking || endBookingDate === startDateOtherBooking)) {
+
+
+            return res.status(403).json({
+                message: 'Sorry, this spot is already booked for the specified dates',
+                errors: {
+                  startDate: 'Start date conflicts with an existing booking',
+                  endDate: 'End date conflicts with an existing booking'
+                }
+            });
+        }
+
+    } 
+
+
+
+
     
     if (booking.userId === currUser.id){
+
+        // await booking.update({ startDate, endDate });
 
         booking.startDate = startDate
         booking.endDate = endDate
@@ -153,15 +220,26 @@ router.delete('/:bookingId', requireAuth, async (req, res) =>{
     let currUser = req.user 
     let {bookingId} = req.params
 
-    let booking = await Booking.findByPk(bookingId)
-    let spotId = booking.spotId
 
-    let spot = await Spot.findByPk(spotId)
+
+
+
+    let booking = await Booking.findByPk(bookingId, {
+        where: {
+            userId: currUser.id 
+        }
+    })
 
     if(!booking){
         res.status(404).json({message:  "Booking couldn't be found"})
     }
 
+
+    let spotId = booking.spotId
+
+    let spot = await Spot.findByPk(spotId)
+
+  
     let currDate = new Date()
     let bookingStartDate = new Date(booking.startDate)
 
@@ -176,6 +254,8 @@ router.delete('/:bookingId', requireAuth, async (req, res) =>{
         await booking.destroy()
 
         return res.status(200).json({message: "Successfully deleted"})
+    }else {
+        return res.status(403).json({message: 'Forbidden'})
     }
 })
 
